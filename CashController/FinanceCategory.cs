@@ -9,8 +9,8 @@ namespace CashController
         }
 
         private string categoryName;
-        public double realAmount;
-        public double foressenAmount;
+        private double realAmount;
+        private double foressenAmount;
         public bool overloadStatus;
 
         public void SetCategoryName(string name)
@@ -61,6 +61,11 @@ namespace CashController
         public double GetForeseenAmount()
         {
             return foressenAmount;
+        }
+
+        public void SetForeseenAmount(double amount)
+        {
+            foressenAmount = amount;
         }
     }
 }
