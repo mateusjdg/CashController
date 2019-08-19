@@ -11,7 +11,7 @@ namespace CashController
         private string categoryName;
         private double realAmount;
         private double foressenAmount;
-        public bool overloadStatus;
+        //public bool overloadStatus;
 
         public void SetCategoryName(string name)
         {
@@ -48,7 +48,7 @@ namespace CashController
             }
             else
             {
-                overloadStatus = true;
+                //overloadStatus = true;
                 return false;
             }
         }

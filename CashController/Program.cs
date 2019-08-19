@@ -28,22 +28,23 @@ namespace CashController
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("--------------------------------------------------");
             Console.WriteLine("| Cash Controller - Welcome to Finantial Freedom |");
-            Console.WriteLine("--------------------------------------------------\n");
+            Console.WriteLine("--------------------------------------------------");
 
             for (; ; ) {
 
-                Console.WriteLine("Menu:\n");
+                Console.WriteLine("\nMenu:\n");
                 Console.WriteLine("1 - Cadastrar categorias financeiras e seus limites");
                 Console.WriteLine("2 - Listar todas as categorias e seus limites");
-                Console.WriteLine("3 - Credito");
-                Console.WriteLine("4 - Debito");
-                Console.WriteLine("5 - Fechar o programa\n");
+                Console.WriteLine("3 - Listar todas as categorias e situacao atual");
+                Console.WriteLine("4 - Deposito");
+                Console.WriteLine("5 - Retirada");
+                Console.WriteLine("6 - Fechar o programa\n");
                 Console.ForegroundColor = currentForeground;
 
                 Console.Write("Digite a função desejada: ");
                 string option = Console.ReadLine();
                 string userChoice = "1";
-                int catCount = 0; ;
+                int catCount = categories.Count;
 
                 switch (option)
                 {
@@ -67,52 +68,129 @@ namespace CashController
                                 catCount = 0;
                         }
                         break;
+
                     case "2":
-                        for (int j = 0; j < categories.Count; j++)
+                        if (categories.Count > 0)
                         {
-                            Console.WriteLine("\nNome da categoria: {0} - Limite: {1}",categories[j].GetCategoryName(),categories[j].GetForeseenAmount());
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                            for (int j = 0; j < categories.Count; j++)
+                            {
+                                Console.WriteLine("Nome da categoria: {0} - Limite: {1}", categories[j].GetCategoryName(), categories[j].GetForeseenAmount());
+                            }
+                            Console.ForegroundColor = currentForeground;
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("\nNao existem categorias cadastradas!");
+                            Console.ForegroundColor = currentForeground;
                         }
                         break;
+
                     case "3":
-                        Console.WriteLine("Opcao 3 escolhida!");
+                        if (categories.Count > 0)
+                        {
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                            for (int n = 0; n < categories.Count; n++)
+                            {
+                                Console.WriteLine("Nome da categoria: {0} - Limite: {1}", categories[n].GetCategoryName(), categories[n].GetRealAmount());
+                            }
+                            Console.ForegroundColor = currentForeground;
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("\nNao existem categorias cadastradas!");
+                            Console.ForegroundColor = currentForeground;
+                        }
                         break;
+
                     case "4":
-                        Console.WriteLine("Opcao 4 escolhida!");
+                        bool depositDone = false;
+                        Console.Write("\nValor do deposito a ser realizado: ");
+                        double creditValue = Convert.ToDouble(Console.ReadLine());
+                        Console.Write("Categoria a ser creditada: ");
+                        string catCreditOption = Console.ReadLine();
+
+                        for (int k = 0; k < categories.Count; k++)
+                        {
+                            if(categories[k].GetCategoryName() == catCreditOption)
+                            {
+                                if (categories[k].Deposit(creditValue))
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Green;
+                                    Console.WriteLine("\nDeposito realizado com sucesso!");
+                                    Console.WriteLine("Valor disponivel na categoria {0}: {1}", categories[k].GetCategoryName(), categories[k].GetRealAmount());
+                                    Console.ForegroundColor = currentForeground;
+                                    depositDone = true;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Erro ao realizar deposito!");
+                                }
+                            }
+                        }
+                        if (!depositDone)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("\nCategoria nao encontrada!");
+                            Console.ForegroundColor = currentForeground;
+                        }
+                
                         break;
+
                     case "5":
+                        bool withDrawDone = false;
+                        Console.Write("\nValor da retirada a ser realizada: ");
+                        double withDrawValue = Convert.ToDouble(Console.ReadLine());
+                        Console.Write("Categoria a ser debitada: ");
+                        string catDebitOption = Console.ReadLine();
+
+                        for (int m = 0; m < categories.Count; m++)
+                        {
+                            if (categories[m].GetCategoryName() == catDebitOption)
+                            {
+                                if (categories[m].Withdraw(withDrawValue))
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Green;
+                                    Console.WriteLine("\nRetirada realizado com sucesso!");
+                                    Console.WriteLine("Valor disponivel na categoria {0}: {1}", categories[m].GetCategoryName(), categories[m].GetRealAmount());
+                                    Console.ForegroundColor = currentForeground;
+                                    withDrawDone = true;
+                                }
+                                else
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine("\nErro ao realizar retirada!");
+                                    Console.WriteLine("Valor solicitado e maior que o disponivel!");
+                                    Console.WriteLine("Solicitado: {0} / Dsiponivel {1}", withDrawValue, categories[m].GetRealAmount());
+                                    Console.ForegroundColor = currentForeground;
+                                    withDrawDone = true;
+                                }
+                            }
+                        }
+                        if (!withDrawDone)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("\nCategoria nao encontrada!");
+                            Console.ForegroundColor = currentForeground;
+                        }
+
+                        break;
+
+                    case "6":
                         Console.WriteLine("Encerrando o programa!");
                         Environment.Exit(0);
                         break;
+
                     default:
-                        Console.WriteLine("Opcao invalida!");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("\nOpcao invalida!");
+                        Console.ForegroundColor = currentForeground;
                         break;
                 }
-            }
-            
-            int i = 0;
-            string opcao = "1";
-
-            while (opcao == "1")
-            {
-                Console.WriteLine("Digite o nome de uma categoria financeira:");
-                string nome = Console.ReadLine();
-                categories.Add(new FinanceCategory { });
-                categories[i].SetCategoryName(nome);
-
-                Console.WriteLine("Deseja inserir outra categoria? 1-SIM | 2-NAO");
-                opcao = Console.ReadLine();
-
-                if (opcao == "1")
-                    i++;
-                else
-                    i = 0;
-            }
-
-            int count = categories.Count;
-            Console.WriteLine("Quantidade de categorias apos do loop: {0}", count);
-            for (int j = 0; j < count; j++ )
-            {
-                Console.WriteLine("Nome da categoria[{0}]: {1}", j, categories[j].GetCategoryName());
             }
         }
     }
