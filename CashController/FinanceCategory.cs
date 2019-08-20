@@ -8,10 +8,10 @@ namespace CashController
         {
         }
 
-        private string categoryName;
-        private double realAmount;
-        private double foressenAmount;
-        //public bool overloadStatus;
+        public string categoryName;
+        public double realAmount;
+        public double foressenAmount;
+        public bool overloadStatus;
 
         public void SetCategoryName(string name)
         {
@@ -44,11 +44,12 @@ namespace CashController
             if( (realAmount-amount) >= 0)
             {
                 realAmount -= amount;
+                overloadStatus = false;
                 return true;
             }
             else
             {
-                //overloadStatus = true;
+                overloadStatus = true;
                 return false;
             }
         }

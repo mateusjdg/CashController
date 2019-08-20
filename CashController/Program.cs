@@ -1,5 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
+using System.Threading;
+using Newtonsoft.Json;
+
+
 
 namespace CashController
 {
@@ -10,6 +15,7 @@ namespace CashController
             List<FinanceCategory> categories = new List<FinanceCategory>();
 
             Console.Title = "Cash Controller - By Mateus";
+            string path = @"C:\Users\mateus.gagliardi\Desktop\CSharp\Mateus\CashController\CashController\categories.json";
 
             /*************************************************************************/
             /* Great colors for foreground: Green, Cyan, Red, Magenta, Yellow, White */
@@ -18,12 +24,12 @@ namespace CashController
             ConsoleColor currentBackground = Console.BackgroundColor;
             ConsoleColor currentForeground = Console.ForegroundColor;
 
-            //Console.ForegroundColor = ConsoleColor.Green;
-            //Console.WriteLine("The foreground color is green.");
-            //Console.ForegroundColor = currentForeground;
-            //Console.ResetColor();
-
             /******************************************************/
+
+            if (File.Exists(path))
+            { 
+                categories = JsonConvert.DeserializeObject<List<FinanceCategory>>(File.ReadAllText(path));
+            }
 
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("--------------------------------------------------");
@@ -36,9 +42,11 @@ namespace CashController
                 Console.WriteLine("1 - Cadastrar categorias financeiras e seus limites");
                 Console.WriteLine("2 - Listar todas as categorias e seus limites");
                 Console.WriteLine("3 - Listar todas as categorias e situacao atual");
-                Console.WriteLine("4 - Deposito");
-                Console.WriteLine("5 - Retirada");
-                Console.WriteLine("6 - Fechar o programa\n");
+                Console.WriteLine("4 - Eliminar uma categoria");
+                Console.WriteLine("5 - Deposito");
+                Console.WriteLine("6 - Retirada");
+                Console.WriteLine("7 - Salvar");
+                Console.WriteLine("8 - Fechar o programa\n");
                 Console.ForegroundColor = currentForeground;
 
                 Console.Write("Digite a função desejada: ");
@@ -60,7 +68,7 @@ namespace CashController
                             double catLimit = Convert.ToDouble(Console.ReadLine());
                             categories[catCount].SetForeseenAmount(catLimit);
 
-                            Console.WriteLine("\nDeseja inserir outra categoria? 1-SIM | 2-NAO");
+                            Console.Write("\nDeseja inserir outra categoria (1-SIM | 2-NAO)? ");
                             userChoice = Console.ReadLine();
                             if (userChoice == "1")
                                 catCount++;
@@ -108,6 +116,24 @@ namespace CashController
                         break;
 
                     case "4":
+                        Console.Write("Categoria a ser eliminada: ");
+                        string catDelOption = Console.ReadLine();
+
+                        for (int m = 0; m < categories.Count; m++)
+                        {
+                            if (categories[m].GetCategoryName() == catDelOption)
+                            {
+                                categories.RemoveAt(m);
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine("\nCategoria eliminada com sucesso!");
+                                Console.ForegroundColor = currentForeground;
+                                break;
+                            }
+                        }
+
+                        break;
+
+                    case "5":
                         bool depositDone = false;
                         Console.Write("\nValor do deposito a ser realizado: ");
                         double creditValue = Convert.ToDouble(Console.ReadLine());
@@ -141,7 +167,7 @@ namespace CashController
                 
                         break;
 
-                    case "5":
+                    case "6":
                         bool withDrawDone = false;
                         Console.Write("\nValor da retirada a ser realizada: ");
                         double withDrawValue = Convert.ToDouble(Console.ReadLine());
@@ -155,7 +181,7 @@ namespace CashController
                                 if (categories[m].Withdraw(withDrawValue))
                                 {
                                     Console.ForegroundColor = ConsoleColor.Green;
-                                    Console.WriteLine("\nRetirada realizado com sucesso!");
+                                    Console.WriteLine("\nRetirada realizada com sucesso!");
                                     Console.WriteLine("Valor disponivel na categoria {0}: {1}", categories[m].GetCategoryName(), categories[m].GetRealAmount());
                                     Console.ForegroundColor = currentForeground;
                                     withDrawDone = true;
@@ -165,7 +191,7 @@ namespace CashController
                                     Console.ForegroundColor = ConsoleColor.Red;
                                     Console.WriteLine("\nErro ao realizar retirada!");
                                     Console.WriteLine("Valor solicitado e maior que o disponivel!");
-                                    Console.WriteLine("Solicitado: {0} / Dsiponivel {1}", withDrawValue, categories[m].GetRealAmount());
+                                    Console.WriteLine("Solicitado: {0} / Disponivel {1}", withDrawValue, categories[m].GetRealAmount());
                                     Console.ForegroundColor = currentForeground;
                                     withDrawDone = true;
                                 }
@@ -180,7 +206,26 @@ namespace CashController
 
                         break;
 
-                    case "6":
+                    case "7":
+                        if (categories.Count > 0)
+                        {
+                            Console.Write("\nSalvando...\n");
+                            Thread.Sleep(500);
+                            using (StreamWriter sw = File.CreateText(path))
+                            {
+                                sw.WriteLine("{0}", JsonConvert.SerializeObject(categories));
+                            }
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("\nNao existem categorias cadastradas!");
+                            Console.ForegroundColor = currentForeground;
+                        }             
+
+                        break;
+          
+                    case "8":
                         Console.WriteLine("Encerrando o programa!");
                         Environment.Exit(0);
                         break;
