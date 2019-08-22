@@ -15,7 +15,8 @@ namespace CashController
             List<FinanceCategory> categories = new List<FinanceCategory>();
 
             Console.Title = "Cash Controller - By Mateus";
-            string path = @"C:\Users\mateus.gagliardi\Desktop\CSharp\Mateus\CashController\CashController\categories.json";
+            //string path = @"C:\Users\mateus.gagliardi\Desktop\CSharp\Mateus\CashController\CashController\categories.json";
+            string path = @"C:\Users\mms\Desktop\Csharp\CashController\CashController\categories.json";
 
             /*************************************************************************/
             /* Great colors for foreground: Green, Cyan, Red, Magenta, Yellow, White */
@@ -79,7 +80,7 @@ namespace CashController
                         if (categories.Count > 0)
                         {
                             Console.WriteLine();
-                            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                            Console.ForegroundColor = ConsoleColor.Yellow;
                             for (int j = 0; j < categories.Count; j++)
                             {
                                 Console.WriteLine("Nome da categoria: {0} - Total de gastos registrado: {1} - Limite de gastos: {2}", categories[j].GetCategoryName(), categories[j].GetRealAmount(), categories[j].GetForeseenAmount());
