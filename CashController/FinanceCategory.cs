@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace CashController
 {
@@ -6,11 +7,12 @@ namespace CashController
     {
         public FinanceCategory()
         {
+            //this.realAmount = 50;
         }
 
-        public string categoryName;
-        public double realAmount;
-        public double foressenAmount;
+        [JsonProperty] private string categoryName;
+        [JsonProperty] private double realAmount;
+        [JsonProperty] private double foressenAmount;
         public bool overloadStatus;
 
         public void SetCategoryName(string name)
@@ -26,30 +28,19 @@ namespace CashController
                 return categoryName;
         }
 
-        public bool Deposit(double amount)
+        public bool ExpenseInput(double amount)
         {
             if (amount > 0)
             {
                 realAmount += amount;
+                if(realAmount > foressenAmount)
+                {
+                    overloadStatus = true;
+                }
                 return true;
             }
             else
             {
-                return false;
-            }
-        }
-
-        public bool Withdraw(double amount)
-        {
-            if( (realAmount-amount) >= 0)
-            {
-                realAmount -= amount;
-                overloadStatus = false;
-                return true;
-            }
-            else
-            {
-                overloadStatus = true;
                 return false;
             }
         }
