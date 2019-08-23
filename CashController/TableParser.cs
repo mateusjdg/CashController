@@ -1,98 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-/*
+
 namespace CashController
 {
-    public static class TableParser
+    public class TableParser
     {
-        public static string ToStringTable<T>(
-          this IEnumerable<T> values,
-          string[] columnHeaders,
-          params Func<T, object>[] valueSelectors)
+
+        public TableParser()
         {
-            return ToStringTable(values.ToArray(), columnHeaders, valueSelectors);
         }
 
-        public static string ToStringTable<T>(
-          this T[] values,
-          string[] columnHeaders,
-          params Func<T, object>[] valueSelectors)
+        private int tableWidth = 60;
+
+        public void PrintLine()
         {
-            Debug.Assert(columnHeaders.Length == valueSelectors.Length);
-
-            var arrValues = new string[values.Length + 1, valueSelectors.Length];
-
-            // Fill headers
-            for (int colIndex = 0; colIndex < arrValues.GetLength(1); colIndex++)
-            {
-                arrValues[0, colIndex] = columnHeaders[colIndex];
-            }
-
-            // Fill table rows
-            for (int rowIndex = 1; rowIndex < arrValues.GetLength(0); rowIndex++)
-            {
-                for (int colIndex = 0; colIndex < arrValues.GetLength(1); colIndex++)
-                {
-                    arrValues[rowIndex, colIndex] = valueSelectors[colIndex]
-                      .Invoke(values[rowIndex - 1]).ToString();
-                }
-            }
-
-            return ToStringTable(arrValues);
+            Console.WriteLine(new string('-', tableWidth));
         }
 
-        public static string ToStringTable(this string[,] arrValues)
+        public void PrintRow(params string[] columns)
         {
-            int[] maxColumnsWidth = GetMaxColumnsWidth(arrValues);
-            var headerSpliter = new string('-', maxColumnsWidth.Sum(i => i + 3) - 1);
+            int width = (tableWidth - columns.Length) / columns.Length;
+            string row = "|";
 
-            var sb = new StringBuilder();
-            for (int rowIndex = 0; rowIndex < arrValues.GetLength(0); rowIndex++)
+            foreach (string column in columns)
             {
-                for (int colIndex = 0; colIndex < arrValues.GetLength(1); colIndex++)
-                {
-                    // Print cell
-                    string cell = arrValues[rowIndex, colIndex];
-                    cell = cell.PadRight(maxColumnsWidth[colIndex]);
-                    sb.Append(" | ");
-                    sb.Append(cell);
-                }
-
-                // Print end of line
-                sb.Append(" | ");
-                sb.AppendLine();
-
-                // Print splitter
-                if (rowIndex == 0)
-                {
-                    sb.AppendFormat(" |{0}| ", headerSpliter);
-                    sb.AppendLine();
-                }
+                row += AlignCentre(column, width) + "|";
             }
 
-            return sb.ToString();
+            Console.WriteLine(row);
         }
 
-        private static int[] GetMaxColumnsWidth(string[,] arrValues)
+        public string AlignCentre(string text, int width)
         {
-            var maxColumnsWidth = new int[arrValues.GetLength(1)];
-            for (int colIndex = 0; colIndex < arrValues.GetLength(1); colIndex++)
+            text = text.Length > width ? text.Substring(0, width - 3) + "..." : text;
+
+            if (string.IsNullOrEmpty(text))
             {
-                for (int rowIndex = 0; rowIndex < arrValues.GetLength(0); rowIndex++)
-                {
-                    int newLength = arrValues[rowIndex, colIndex].Length;
-                    int oldLength = maxColumnsWidth[colIndex];
-
-                    if (newLength > oldLength)
-                    {
-                        maxColumnsWidth[colIndex] = newLength;
-                    }
-                }
+                return new string(' ', width);
             }
-
-            return maxColumnsWidth;
+            else
+            {
+                return text.PadRight(width - (width - text.Length) / 2).PadLeft(width);
+            }
         }
     }
 }
-*/

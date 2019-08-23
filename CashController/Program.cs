@@ -5,7 +5,6 @@ using System.Threading;
 using Newtonsoft.Json;
 
 
-
 namespace CashController
 {
     class Program
@@ -15,8 +14,8 @@ namespace CashController
             List<FinanceCategory> categories = new List<FinanceCategory>();
 
             Console.Title = "Cash Controller - By Mateus";
-            //string path = @"C:\Users\mateus.gagliardi\Desktop\CSharp\Mateus\CashController\CashController\categories.json";
-            string path = @"C:\Users\mms\Desktop\Csharp\CashController\CashController\categories.json";
+            string path = @"C:\Users\mateus.gagliardi\Desktop\CSharp\Mateus\CashController\CashController\categories.json";
+            //string path = @"C:\Users\mms\Desktop\Csharp\CashController\CashController\categories.json";
 
             /*************************************************************************/
             /* Great colors for foreground: Green, Cyan, Red, Magenta, Yellow, White */
@@ -77,15 +76,28 @@ namespace CashController
                         break;
 
                     case "2":
+
                         if (categories.Count > 0)
                         {
                             Console.WriteLine();
                             Console.ForegroundColor = ConsoleColor.Yellow;
+
+                            TableParser tableParser = new TableParser();
+                            tableParser.PrintLine();
+                            string[] titleNames = new string[] { "CATEGORIA", "VALOR GASTO", "LIMITE", "DELTA" };
+                            tableParser.PrintRow(titleNames);
+                            tableParser.PrintLine();
+                            
+                            Console.ForegroundColor = ConsoleColor.White;
                             for (int j = 0; j < categories.Count; j++)
-                            {
-                                Console.WriteLine("Nome da categoria: {0} - Total de gastos registrado: {1} - Limite de gastos: {2}", categories[j].GetCategoryName(), categories[j].GetRealAmount(), categories[j].GetForeseenAmount());
+                            { 
+                                string[] colData = new string[] { categories[j].GetCategoryName(), categories[j].GetRealAmount().ToString(), categories[j].GetForeseenAmount().ToString(), (categories[j].GetForeseenAmount() - categories[j].GetRealAmount()).ToString() };
+                                tableParser.PrintRow(colData);
+                                tableParser.PrintLine();
                             }
+                                                       
                             Console.ForegroundColor = currentForeground;
+                            
                         }
                         else
                         {
@@ -93,6 +105,7 @@ namespace CashController
                             Console.WriteLine("\nNao existem categorias cadastradas!");
                             Console.ForegroundColor = currentForeground;
                         }
+                        
                         break;
 
                     case "3":
