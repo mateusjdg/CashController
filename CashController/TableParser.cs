@@ -6,16 +6,15 @@ namespace CashController
 {
     public class TableParser
     {
-
         public TableParser()
         {
         }
 
-        private int tableWidth = 60;
+        private int tableWidth = 70;
 
         public void PrintLine()
         {
-            Console.WriteLine(new string('-', tableWidth));
+            Console.WriteLine(new string('-', tableWidth+1));
         }
 
         public void PrintRow(params string[] columns)

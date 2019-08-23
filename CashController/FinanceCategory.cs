@@ -45,6 +45,13 @@ namespace CashController
             }
         }
 
+        /*
+        public override string ToString()
+        {
+            
+        }
+        */
+
         public double GetRealAmount()
         {
             return realAmount;

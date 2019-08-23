@@ -84,15 +84,19 @@ namespace CashController
 
                             TableParser tableParser = new TableParser();
                             tableParser.PrintLine();
-                            string[] titleNames = new string[] { "CATEGORIA", "VALOR GASTO", "LIMITE", "DELTA" };
-                            tableParser.PrintRow(titleNames);
+                            tableParser.PrintRow(new string[] { "CATEGORIA", "VALOR GASTO", "LIMITE", "DELTA", "SITUACAO" });
                             tableParser.PrintLine();
                             
                             Console.ForegroundColor = ConsoleColor.White;
                             for (int j = 0; j < categories.Count; j++)
-                            { 
-                                string[] colData = new string[] { categories[j].GetCategoryName(), categories[j].GetRealAmount().ToString(), categories[j].GetForeseenAmount().ToString(), (categories[j].GetForeseenAmount() - categories[j].GetRealAmount()).ToString() };
-                                tableParser.PrintRow(colData);
+                            {
+                                string catStatus;
+                                if (categories[j].overloadStatus)
+                                    catStatus = "CHEGA";
+                                else
+                                    catStatus = "AINDA TEM";
+
+                                tableParser.PrintRow(new string[] { categories[j].GetCategoryName(), categories[j].GetRealAmount().ToString(), categories[j].GetForeseenAmount().ToString(), (categories[j].GetForeseenAmount() - categories[j].GetRealAmount()).ToString(), catStatus });
                                 tableParser.PrintLine();
                             }
                                                        
@@ -196,7 +200,7 @@ namespace CashController
                             Thread.Sleep(500);
                             using (StreamWriter sw = File.CreateText(path))
                             {
-                                sw.WriteLine("{0}", JsonConvert.SerializeObject(categories));
+                                sw.WriteLine(JsonConvert.SerializeObject(categories));
                             }
                         }
                         else
